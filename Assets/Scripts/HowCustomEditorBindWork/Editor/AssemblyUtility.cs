@@ -38,6 +38,10 @@ namespace HowCustomEditorBindWork.Editor
             if (text.StartsWithAnyOf(userAssemblyPrefixes, StringComparison.InvariantCultureIgnoreCase))
             {
                 Debug.Log($"{assembly.FullName} is user assembly");
+                foreach (var type in assembly.SafeGetTypes())
+                {
+                    Debug.Log(type);
+                }
             }
             // else
             // {
@@ -73,6 +77,20 @@ namespace HowCustomEditorBindWork.Editor
         private static void OnAssemblyLoaded(object sender, AssemblyLoadEventArgs evt)
         {
             //evt.LoadedAssembly
+        }
+        
+        public static Type[] SafeGetTypes(this Assembly assembly)
+        {
+            Type[] result;
+            try
+            {
+                result = assembly.GetTypes();
+            }
+            catch
+            {
+                result = Type.EmptyTypes;
+            }
+            return result;
         }
     }
 }
